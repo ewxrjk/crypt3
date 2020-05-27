@@ -1,0 +1,31 @@
+.TH crypt3 1
+.SH NAME
+crypt3 \- password encryption
+.SH SYNOPSIS
+\fBcrypt3\fR [\fIOPTIONS]\fR \fIPASSWORD\fR...
+.br
+\fBcrypt3\fR [\fIOPTIONS]\fR \fIPASSWORD\fR...
+.SH DESCRIPTION
+\fBcrypt3\fR encrypts a password using \fBcrypt\fR(3).
+The password can be read from the terminal or multiple passwords can be specified on the command line.
+.SH OPTIONS
+.TP
+.B \-\-des
+Traditional iterated DES encryption.
+Comedically insecure.
+.TP
+.B \-\-md5
+Iterated MD5.
+.TP
+.B \-\-sha256
+Iterated SHA256.
+.TP
+.B \-\-sha512
+Iterated SHA512.
+This is the default.
+.TP
+.B \-\-help
+Display help message.
+.TP
+.B \-\-version
+Display version string.
