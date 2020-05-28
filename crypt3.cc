@@ -107,7 +107,7 @@ static int encrypt_getpass(void) {
 
   for(;;) {
     pw1 = getpass("Enter password: ");
-    pw2 = getpass("Reytpe password: ");
+    pw2 = getpass("Retype password: ");
     if(pw1 == pw2)
       break;
     fprintf(stderr, "ERROR: passwords do not match\n");

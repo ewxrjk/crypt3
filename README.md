@@ -16,7 +16,7 @@ sudo make install
 ```
 $ crypt3 
 Enter password: 
-Reytpe password: 
+Retype password: 
 $6$DLwtdvJ.mGpVjtsd$6NKZLh/WIi9Gd2vvnYrzJ7bDCrOA2lTMasIdrzy9V//BsRDL9yC2RIxJan5eaExJkWUKleh125B22FN64PELs0
 ```
 
