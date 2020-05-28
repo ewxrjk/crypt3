@@ -7,7 +7,20 @@ crypt3 \- password encryption
 \fBcrypt3\fR [\fIOPTIONS]\fR \fIPASSWORD\fR...
 .SH DESCRIPTION
 \fBcrypt3\fR encrypts a password using \fBcrypt\fR(3).
-The password can be read from the terminal or multiple passwords can be specified on the command line.
+.SS "Terminal Usage"
+If run from a terminal without any passwords on the command line,
+\fBcrypt3\fR reads one password fron the terminal without echo and confirms it.
+It then prints the encrypted form of the password.
+.SS "File Usage"
+If run without any passwords on the command line with a non-terminal on standard input,
+\fBcrypt3\fR reads passwords from standard input and prints the encrypted form of each.
+It stops when the input reaches end of file.
+.SS "Command-Line Usage"
+If run with passwords on the command line,
+\fBcrypt3\fR prints the encrypted form of each password.
+.PP
+This isn't very secure since command line are visible in \fBps\fR(1) output,
+but it's convenient for low-value passwords.
 .SH OPTIONS
 .TP
 .B \-\-des

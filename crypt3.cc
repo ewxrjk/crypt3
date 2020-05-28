@@ -102,6 +102,39 @@ static std::string encrypt(const std::string pw) {
   return crypt(pw.c_str(), salt.c_str());
 }
 
+static int encrypt_getpass(void) {
+  std::string pw1, pw2;
+
+  for(;;) {
+    pw1 = getpass("Enter password: ");
+    pw2 = getpass("Reytpe password: ");
+    if(pw1 == pw2)
+      break;
+    fprintf(stderr, "ERROR: passwords do not match\n");
+  }
+  return printf("%s\n", encrypt(pw1).c_str()) < 0;
+}
+
+static int encrypt_stdin(void) {
+  std::string s;
+  for(;;) {
+    int ch;
+
+    s.clear();
+    while((ch = getchar()) != EOF && ch != '\n')
+      s += (char)ch;
+    if(ch == EOF) {
+      if(ferror(stdin)) {
+        perror("stdin");
+        return 1;
+      }
+      return 0;
+    }
+    if(printf("%s\n", encrypt(s).c_str()) < 0)
+      return 1;
+  }
+}
+
 int main(int argc, char **argv) {
   int n;
   while((n = getopt_long(argc, argv, "", options, nullptr)) >= 0) {
@@ -116,16 +149,13 @@ int main(int argc, char **argv) {
     }
   }
   if(optind == argc) {
-    std::string pw1, pw2;
-
-    for(;;) {
-      pw1 = getpass("Enter password: ");
-      pw2 = getpass("Reytpe password: ");
-      if(pw1 == pw2)
-        break;
-      fprintf(stderr, "ERROR: password do not match\n");
+    if(isatty(0)) {
+      if(encrypt_getpass())
+        return 1;
+    } else {
+      if(encrypt_stdin())
+        return 1;
     }
-    printf("%s\n", encrypt(pw1).c_str());
   } else {
     for(n = optind; n < argc; n++)
       printf("%s\n", encrypt(argv[n]).c_str());
