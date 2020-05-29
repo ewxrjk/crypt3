@@ -62,6 +62,10 @@ static void help(void) {
          "  --version                  Display version string\n");
 }
 
+#ifndef TAG
+#define TAG "unknown"
+#endif
+
 static void version(void) {
   printf("version %s tag %s\n", PACKAGE_VERSION, TAG);
 }
