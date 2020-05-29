@@ -98,9 +98,9 @@ static std::string encrypt(const std::string pw) {
   std::string salt;
   switch(alg) {
   case OPT_DES: salt = getsalt(2); break;
-  case OPT_MD5: salt = "$1$" + getsalt(22); break;
-  case OPT_SHA256: salt = "$5$" + getsalt(43); break;
-  case OPT_SHA512: salt = "$6$" + getsalt(86); break;
+  case OPT_MD5: salt = "$1$" + getsalt(16); break;
+  case OPT_SHA256: salt = "$5$" + getsalt(16); break;
+  case OPT_SHA512: salt = "$6$" + getsalt(16); break;
   default: abort(); // shouldn't happen
   }
   return crypt(pw.c_str(), salt.c_str());
