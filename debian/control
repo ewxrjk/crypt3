@@ -1,0 +1,12 @@
+Source: crypt3
+Section: utils
+Priority: optional
+Maintainer: Richard Kettlewell <rjk@greenend.org.uk>
+Standards-Version: 3.9.2
+Homepage: https://github.com/ewxrjk/crypt3
+
+Package: crypt3
+Architecture: any
+Depends: ${misc:Depends},${shlibs:Depends}
+Description: crypt(3)-based password encryption
+ A straightforward command-line interface to crypt(3).

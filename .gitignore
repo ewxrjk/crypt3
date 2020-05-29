@@ -7,9 +7,12 @@ config.h.in
 config.log
 config.status
 configure
+crypt3
+debian/*.debhelper.log
+debian/files
+debian/*.substvars
 .deps
 Makefile
 Makefile.in
 *.o
-crypt3
 stamp-h1

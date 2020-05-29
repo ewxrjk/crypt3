@@ -20,5 +20,6 @@ bin_PROGRAMS=crypt3
 crypt3_SOURCES=crypt3.cc 
 AM_CXXFLAGS=-DTAG=\"${tag}\"
 man_MANS=crypt3.1
-EXTRA_DIST=${man_MANS} README.md .clang-format .gitignore
+EXTRA_DIST=${man_MANS} README.md .clang-format .gitignore \
+    debian/compat debian/control debian/copyright debian/rules debian/changelog
 ACLOCAL_AMFLAGS=-I m4
