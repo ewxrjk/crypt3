@@ -25,6 +25,8 @@
 #include <algorithm>
 #include <config.h>
 
+#include "libcrypt3.h"
+
 enum {
   OPT_HELP = UCHAR_MAX + 1,
   OPT_VERSION,
@@ -103,7 +105,7 @@ static std::string encrypt(const std::string pw) {
   case OPT_SHA512: salt = "$6$" + getsalt(16); break;
   default: abort(); // shouldn't happen
   }
-  return crypt(pw.c_str(), salt.c_str());
+  return libcrypt3_crypt(pw.c_str(), salt.c_str());
 }
 
 static int encrypt_getpass(void) {

@@ -25,12 +25,23 @@ AC_CONFIG_SRCDIR([crypt3.cc])
 AM_CONFIG_HEADER([config.h])
 AC_LANG([C++])
 AC_PROG_CXX
-AC_CHECK_LIB([crypt],[crypt])
+AC_PROG_CC
+AC_PROG_RANLIB
+case $(uname -n) in
+Darwin )
+  ;;
+* )
+  AC_CHECK_LIB([crypto],[SHA256_Init])
+  ;;
+esac
 CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 AC_SET_MAKE
 AC_DEFINE([_GNU_SOURCE], [1], [use GNU extensions])
 if test "x$GXX" = xyes; then
   CXXFLAGS="$CXXFLAGS -Wall -W -Werror -Wpointer-arith -Wwrite-strings"
 fi
-AC_CONFIG_FILES([Makefile])
+if test "x$GCC" = xyes; then
+  CFLAGS="$CFLAGS -Wall -W -Werror -Wpointer-arith -Wwrite-strings"
+fi
+AC_CONFIG_FILES([Makefile libcrypt3/Makefile])
 AC_OUTPUT

@@ -16,9 +16,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 tag:=$(shell git describe --tags --dirty --always)
+SUBDIRS=libcrypt3
+
 bin_PROGRAMS=crypt3
-crypt3_SOURCES=crypt3.cc 
+crypt3_SOURCES=crypt3.cc
+
+noinst_PROGRAMS=test_crypt
+test_crypt_SOURCES=test_crypt.cc
+TESTS=test_crypt
+
 AM_CXXFLAGS=-DTAG=\"${tag}\"
+AM_CPPFLAGS=-I ${top_srcdir}/libcrypt3
+LDADD=libcrypt3/libcrypt3.a
 man_MANS=crypt3.1
 EXTRA_DIST=${man_MANS} README.md .clang-format .gitignore \
     debian/compat debian/control debian/copyright debian/rules debian/changelog

@@ -1,4 +1,12 @@
+*.a
+*.log
+*.o
+*.trs
 *~
+.deps
+.gdb_history
+Makefile
+Makefile.in
 aclocal.m4
 autom4te.cache
 config.aux
@@ -9,10 +17,7 @@ config.status
 configure
 crypt3
 debian/*.debhelper.log
-debian/files
 debian/*.substvars
-.deps
-Makefile
-Makefile.in
-*.o
+debian/files
 stamp-h1
+test_crypt
