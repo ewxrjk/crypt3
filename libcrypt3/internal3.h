@@ -18,16 +18,19 @@
 #ifndef INTERNAL3_H
 #define INTERNAL3_H
 
+#include <config.h>
 #include "libcrypt3.h"
 
 #include <stdint.h>
 
-int libcrypt3_des(const char *pw, const char *salt, char *buf);
-int libcrypt3_md5(const char *pw, const char *salt, char *buf);
-int libcrypt3_nthash(const char *pw, const char *salt, char *buf);
-int libcrypt3_blowfish(const char *pw, const char *salt, char *buf);
-int libcrypt3_sha256(const char *pw, const char *salt, char *buf);
-int libcrypt3_sha512(const char *pw, const char *salt, char *buf);
+int libcrypt3_des(char buffer[], size_t bufsize, const char *pw,
+                  const char *salt);
+int libcrypt3_md5(char buffer[], size_t bufsize, const char *pw,
+                  const char *salt);
+int libcrypt3_sha256(char buffer[], size_t bufsize, const char *pw,
+                     const char *salt);
+int libcrypt3_sha512(char buffer[], size_t bufsize, const char *pw,
+                     const char *salt);
 
 extern void libcrypt3_to64(char *s, unsigned long v, int n);
 extern void libcrypt3_b64(uint8_t B2, uint8_t B1, uint8_t B0, int n, char **cp);

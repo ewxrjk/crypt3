@@ -8,8 +8,7 @@
  * To encrypt a password:
  * - Select the encryption algorithm.
  * - Generate a random salt, either manually or using @ref libcrypt3_pick_salt.
- * - Encrypt the password, using @ref libcrypt3_crypt_r or @ref
- * libcrypt3_crypt.
+ * - Encrypt the password, using @ref libcrypt3_crypt.
  *
  * The resulting encrypted password should be stored.
  *
@@ -18,7 +17,7 @@
  * To verify a candidate password:
  * - Retrieve the encrypted password from the first step.
  * - Encrypt the candidate password, with the encrypted password as the salt
- * argument, using @ref libcrypt3_crypt_r or @ref libcrypt3_crypt.
+ * argument, using @ref libcrypt3_crypt.
  * - Compare the result with the encrypted password. If they match then the
  * candidate password was correct.
  *

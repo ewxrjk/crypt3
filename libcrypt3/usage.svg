@@ -290,7 +290,7 @@
          id="tspan4522-5"
          x="105.6969"
          y="48.670967"
-         style="stroke-width:0.26458332px">libcrypt3_crypt_r</tspan></text>
+         style="stroke-width:0.26458332px">libcrypt3_crypt</tspan></text>
     <rect
        style="opacity:1;fill:none;fill-opacity:1;stroke:#000300;stroke-width:0.52916676;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4520-6"
@@ -362,7 +362,7 @@
          id="tspan4522-5-6"
          x="37.96357"
          y="48.670967"
-         style="stroke-width:0.26458332px">libcrypt3_crypt_r</tspan></text>
+         style="stroke-width:0.26458332px">libcrypt3_crypt</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.5291667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker5019)"
        d="m 25.4,34.533329 v 8.466666"

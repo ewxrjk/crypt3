@@ -19,6 +19,7 @@ config.log
 config.status
 configure
 crypt3
+crypt3-*.tar.gz
 debian/*.debhelper.log
 debian/*.substvars
 debian/files

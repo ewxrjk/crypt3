@@ -50,7 +50,8 @@ static const char sha256_rounds_prefix[] = "rounds=";
 /* Maximum number of rounds. */
 #define ROUNDS_MAX 999999999
 
-int libcrypt3_sha256(const char *key, const char *salt, char *buffer) {
+int libcrypt3_sha256(char *buffer, size_t attribute((unused)) bufsize,
+                     const char *key, const char *salt) {
   unsigned long srounds;
   uint8_t alt_result[32], temp_result[32];
   SHA256_CTX ctx, alt_ctx;

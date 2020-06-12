@@ -43,5 +43,10 @@ fi
 if test "x$GCC" = xyes; then
   CFLAGS="$CFLAGS -Wall -W -Werror -Wpointer-arith -Wwrite-strings"
 fi
+AH_BOTTOM([#ifdef __GNUC__
+# define attribute(x) __attribute__(x)
+#else
+# define attribute(x)
+#endif])
 AC_CONFIG_FILES([Makefile libcrypt3/Makefile])
 AC_OUTPUT

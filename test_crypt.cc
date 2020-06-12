@@ -83,7 +83,9 @@ int main() {
   int errors = 0;
   std::string encrypted;
   for(const auto &tc : test_cases) {
-    encrypted = libcrypt3_crypt(tc.password.c_str(), tc.salt.c_str());
+    char buffer[LIBCRYPT3_BUFSIZE];
+    encrypted = libcrypt3_crypt(buffer, sizeof buffer, tc.password.c_str(),
+                                tc.salt.c_str());
     if(encrypted != tc.result) {
       fprintf(stderr,
               "ERROR: salt=%s password=%s\n"

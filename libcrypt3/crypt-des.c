@@ -56,7 +56,7 @@
  *	alignment).
  */
 
-#include "libcrypt3.h"
+#include "internal3.h"
 
 #include <arpa/inet.h>
 #include <string.h>
@@ -513,7 +513,8 @@ static int des_cipher(const char *in, char *out, unsigned long salt,
   return (retval);
 }
 
-int libcrypt3_des(const char *key, const char *setting, char *buffer) {
+int libcrypt3_des(char *buffer, size_t attribute((unused)) bufsize,
+                  const char *key, const char *setting) {
   int i;
   u_int32_t count, salt, l, r0, r1, keybuf[2];
   unsigned char *q;

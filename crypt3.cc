@@ -30,6 +30,7 @@
 enum {
   OPT_HELP = UCHAR_MAX + 1,
   OPT_VERSION,
+  OPT_ROUNDS,
   OPT_ALG,
   OPT_DES = OPT_ALG + LIBCRYPT3_DES,
   OPT_MD5 = OPT_ALG + LIBCRYPT3_MD5,
@@ -38,10 +39,12 @@ enum {
 };
 
 static int alg = LIBCRYPT3_SHA512;
+static int rounds = 0;
 
 static const struct option options[] = {
   { "help", no_argument, nullptr, OPT_HELP },
   { "version", no_argument, nullptr, OPT_VERSION },
+  { "rounds", required_argument, nullptr, OPT_ROUNDS },
   { "des", no_argument, nullptr, OPT_DES },
   { "md5", no_argument, nullptr, OPT_MD5 },
   { "sha256", no_argument, nullptr, OPT_SHA256 },
@@ -74,11 +77,12 @@ static void version(void) {
 
 static std::string encrypt(const std::string pw) {
   char salt[64];
+  char buffer[LIBCRYPT3_BUFSIZE];
   if(libcrypt3_pick_salt(salt, sizeof salt, alg, 0) < 0) {
     perror("picking salt");
     exit(1);
   }
-  return libcrypt3_crypt(pw.c_str(), salt);
+  return libcrypt3_crypt(buffer, sizeof buffer, pw.c_str(), salt);
 }
 
 static int encrypt_getpass(void) {
@@ -120,6 +124,7 @@ int main(int argc, char **argv) {
     switch(n) {
     case OPT_HELP: help(); return 0;
     case OPT_VERSION: version(); return 0;
+    case OPT_ROUNDS: rounds = atoi(optarg); break;
     case OPT_DES:
     case OPT_MD5:
     case OPT_SHA256:

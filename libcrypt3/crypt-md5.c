@@ -36,7 +36,8 @@
  * UNIX password
  */
 
-int libcrypt3_md5(const char *pw, const char *salt, char *buffer) {
+int libcrypt3_md5(char *buffer, size_t attribute((unused)) bufsize,
+                  const char *pw, const char *salt) {
   MD5_CTX ctx, ctx1;
   unsigned long l;
   int sl, pl;

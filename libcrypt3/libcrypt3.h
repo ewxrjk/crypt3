@@ -45,34 +45,19 @@
 extern "C" {
 #endif
 
-/** @brief State structured used by @ref libcrypt3_crypt_r */
-struct libcrypt3_data {
-  /** @brief Buffer returned by @ref libcrypt3_crypt_r */
-  char buf[256];
-};
-
 /** @brief The set of characters that may be used in a password salt */
 #define LIBCRYPT3_ALPHABET                                                     \
   "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
-/** @brief Non-re-entrant Password encryption
- * @param passwd The password to encrypt
- * @param salt The salt string, or the encrytped password
- * @return A private copy of the encrypted password
- *
- * This function is equivalent to @ref libcrypt3_crypt_r,
- * except that it uses a private internal buffer.
- * This means that:
- * - it must not be called concurrently from two threads.
- * - each call will overwrite the value returned by the previuos call.
- */
-char *libcrypt3_crypt(const char *passwd, const char *salt);
+/** @brief Recommended buffer size for @ref libcrypt3_crypt */
+#define LIBCRYPT3_BUFSIZE 256
 
 /** @brief Re-entrant password encryption
+ * @param buffer The buffer for the result
+ * @param bufsize The size of @p buffer (use @ref LIBCRYPT3_BUFSIZE)
  * @param passwd The password to encrypt
  * @param salt The salt string, or the encrypted password
- * @param data A buffer for the result
- * @return The encrypted password
+ * @return The encrypted password, or @c NULL on error
  *
  * The algorithm used depends on the @p salt parameter:
  *
@@ -113,8 +98,8 @@ char *libcrypt3_crypt(const char *passwd, const char *salt);
  * - DES encryption only considers the first 8 bytes of the password
  * - DES encryption ignores bit 7 of each byte of the password
  */
-char *libcrypt3_crypt_r(const char *passwd, const char *salt,
-                        struct libcrypt3_data *data);
+char *libcrypt3_crypt(char buffer[], size_t bufsize, const char *passwd,
+                      const char *salt);
 
 /** @brief Create salt for the legacy DES-based password encryption algorithm */
 #define LIBCRYPT3_DES 0
@@ -128,7 +113,7 @@ char *libcrypt3_crypt_r(const char *passwd, const char *salt,
 /** @brief Create salt for the SHA512-based password encryption algorithm */
 #define LIBCRYPT3_SHA512 6
 
-/** @brief Pick a random salt for @ref libcrypt3_crypt or @ref libcrypt3_crypt_r
+/** @brief Pick a random salt for @ref libcrypt3_crypt
  * @param buffer Buffer for result
  * @param bufsize Size of buffer
  * @param alg Algorithm to use for password encryption

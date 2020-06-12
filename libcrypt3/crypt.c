@@ -43,7 +43,7 @@
  */
 static const struct crypt_format {
   const char *name;
-  int (*func)(const char *, const char *, char *);
+  int (*func)(char[], size_t, const char *, const char *);
   const char *magic;
 } crypt_formats[] = { { "md5", libcrypt3_md5, "$1$" },
                       { "sha256", libcrypt3_sha256, "$5$" },
@@ -86,35 +86,22 @@ int crypt_set_format(const char *format) {
  * magic string (e.g. "$6$" for sha512), the corresponding format is used;
  * otherwise, the currently selected format is used.
  */
-char *libcrypt3_crypt_r(const char *passwd, const char *salt,
-                        struct libcrypt3_data *data) {
+char *libcrypt3_crypt(char buffer[], size_t bufsize, const char *passwd,
+                      const char *salt) {
   const struct crypt_format *cf;
-  int (*func)(const char *, const char *, char *);
-#ifdef HAS_DES
-  int len;
-#endif
+  int (*func)(char[], size_t, const char *, const char *);
+
+  if(bufsize < LIBCRYPT3_BUFSIZE)
+    return NULL;
 
   for(cf = crypt_formats; cf->name != NULL; ++cf)
     if(cf->magic != NULL && strstr(salt, cf->magic) == salt) {
       func = cf->func;
       goto match;
     }
-#ifdef HAS_DES
-  len = strlen(salt);
-  if((len == 13 || len == 2) && strspn(salt, DES_SALT_ALPHABET) == len) {
-    func = crypt_des;
-    goto match;
-  }
-#endif
   func = crypt_format->func;
 match:
-  if(func(passwd, salt, data->buf) != 0)
+  if(func(buffer, bufsize, passwd, salt) != 0)
     return (NULL);
-  return (data->buf);
-}
-
-char *libcrypt3_crypt(const char *passwd, const char *salt) {
-  static struct libcrypt3_data data;
-
-  return (libcrypt3_crypt_r(passwd, salt, &data));
+  return buffer;
 }
