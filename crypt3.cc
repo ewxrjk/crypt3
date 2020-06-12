@@ -30,14 +30,14 @@
 enum {
   OPT_HELP = UCHAR_MAX + 1,
   OPT_VERSION,
-  OPT_DES,
-  OPT_MD5,
-  OPT_SHA256,
-  OPT_SHA512,
+  OPT_ALG,
+  OPT_DES = OPT_ALG + LIBCRYPT3_DES,
+  OPT_MD5 = OPT_ALG + LIBCRYPT3_MD5,
+  OPT_SHA256 = OPT_ALG + LIBCRYPT3_SHA256,
+  OPT_SHA512 = OPT_ALG + LIBCRYPT3_SHA512,
 };
 
-static int alg = OPT_SHA512;
-static int randomfd = -1;
+static int alg = LIBCRYPT3_SHA512;
 
 static const struct option options[] = {
   { "help", no_argument, nullptr, OPT_HELP },
@@ -72,40 +72,13 @@ static void version(void) {
   printf("version %s tag %s\n", PACKAGE_VERSION, TAG);
 }
 
-static std::string getsalt(size_t n) {
-  static const char saltchars[] =
-    "abcdefghijklmnopqrstvuwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ0123456789./";
-  std::string s;
-  char buffer[64];
-  if(randomfd < 0) {
-    if((randomfd = open("/dev/urandom", O_RDONLY)) < 0) {
-      perror("/dev/urandom");
-      exit(1);
-    }
-  }
-  while(s.size() < n) {
-    ssize_t r = read(randomfd, buffer, std::min(sizeof buffer, n - s.size()));
-    if(r < 0) {
-      perror("read /dev/urandom");
-      exit(1);
-    }
-    s.append(buffer, r);
-  }
-  for(size_t i = 0; i < n; i++)
-    s.at(i) = saltchars[s.at(i) & 63];
-  return s;
-}
-
 static std::string encrypt(const std::string pw) {
-  std::string salt;
-  switch(alg) {
-  case OPT_DES: salt = getsalt(2); break;
-  case OPT_MD5: salt = "$1$" + getsalt(16); break;
-  case OPT_SHA256: salt = "$5$" + getsalt(16); break;
-  case OPT_SHA512: salt = "$6$" + getsalt(16); break;
-  default: abort(); // shouldn't happen
+  char salt[64];
+  if(libcrypt3_pick_salt(salt, sizeof salt, alg, 0) < 0) {
+    perror("picking salt");
+    exit(1);
   }
-  return libcrypt3_crypt(pw.c_str(), salt.c_str());
+  return libcrypt3_crypt(pw.c_str(), salt);
 }
 
 static int encrypt_getpass(void) {
@@ -150,7 +123,7 @@ int main(int argc, char **argv) {
     case OPT_DES:
     case OPT_MD5:
     case OPT_SHA256:
-    case OPT_SHA512: alg = n; break;
+    case OPT_SHA512: alg = n - OPT_ALG; break;
     default: return 1;
     }
   }

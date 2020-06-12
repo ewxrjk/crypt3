@@ -15,4 +15,5 @@
 #    without specific prior written permission.
 #
 noinst_LIBRARIES=libcrypt3.a
-libcrypt3_a_SOURCES=crypt.c libcrypt3.h crypt-des.c crypt-md5.c crypt-sha256.c crypt-sha512.c misc.c internal3.h
+libcrypt3_a_SOURCES=crypt.c libcrypt3.h crypt-des.c crypt-md5.c crypt-sha256.c crypt-sha512.c salt.c misc.c internal3.h
+EXTRA_DIST=mainpage.h usage.svg
