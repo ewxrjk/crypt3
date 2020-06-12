@@ -17,5 +17,7 @@
 lib_LTLIBRARIES=libcrypt3.la
 include_HEADERS=libcrypt3.h
 libcrypt3_la_SOURCES=crypt.c libcrypt3.h crypt-des.c crypt-md5.c crypt-sha256.c crypt-sha512.c salt.c misc.c internal3.h
-libcrypt3_la_LDFLAGS=-export-symbols ${srcdir}/libcrypt3.sym
+# See https://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
+# for rules about updating -version-info.
+libcrypt3_la_LDFLAGS=-export-symbols ${srcdir}/libcrypt3.sym -version-info 0:0:0
 EXTRA_DIST=mainpage.h usage.svg
