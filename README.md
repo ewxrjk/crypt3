@@ -6,7 +6,7 @@ This program provides a straightforward command-line interface to [crypt(3)](htt
 
 ```
 sudo apt install libssl-dev
-autoreconf -si
+./autogen.sh
 ./configure
 make check
 sudo make install

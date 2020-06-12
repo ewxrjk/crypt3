@@ -27,7 +27,7 @@ TESTS=test_crypt
 
 AM_CXXFLAGS=-DTAG=\"${tag}\"
 AM_CPPFLAGS=-I ${top_srcdir}/libcrypt3
-LDADD=libcrypt3/libcrypt3.a
+LDADD=libcrypt3/libcrypt3.la
 man_MANS=crypt3.1
 EXTRA_DIST=${man_MANS} README.md .clang-format .gitignore Doxyfile \
     debian/compat debian/control debian/copyright debian/rules debian/changelog

@@ -14,6 +14,8 @@
 #    may be used to endorse or promote products derived from this software
 #    without specific prior written permission.
 #
-noinst_LIBRARIES=libcrypt3.a
-libcrypt3_a_SOURCES=crypt.c libcrypt3.h crypt-des.c crypt-md5.c crypt-sha256.c crypt-sha512.c salt.c misc.c internal3.h
+lib_LTLIBRARIES=libcrypt3.la
+include_HEADERS=libcrypt3.h
+libcrypt3_la_SOURCES=crypt.c libcrypt3.h crypt-des.c crypt-md5.c crypt-sha256.c crypt-sha512.c salt.c misc.c internal3.h
+libcrypt3_la_LDFLAGS=-export-symbols ${srcdir}/libcrypt3.sym
 EXTRA_DIST=mainpage.h usage.svg

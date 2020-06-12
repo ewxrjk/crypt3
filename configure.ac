@@ -26,7 +26,7 @@ AM_CONFIG_HEADER([config.h])
 AC_LANG([C++])
 AC_PROG_CXX
 AC_PROG_CC
-AC_PROG_RANLIB
+AC_PROG_LIBTOOL
 case $(uname -n) in
 Darwin )
   ;;

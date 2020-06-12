@@ -1,10 +1,13 @@
 *.a
+*.la
+*.lo
 *.log
 *.o
 *.trs
 *~
 .deps
 .gdb_history
+.libs
 Makefile
 Makefile.in
 aclocal.m4
@@ -20,5 +23,7 @@ debian/*.debhelper.log
 debian/*.substvars
 debian/files
 html
+libtool
+m4
 stamp-h1
 test_crypt
