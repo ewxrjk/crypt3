@@ -56,6 +56,9 @@ const struct test_case test_cases[] = {
     "$5$LW4LThfdqh6Bz7sv$cKPc6e9o61RIlB6noon1D0wT60MvxxkQa.En2xOrQh3" },
   { "$5$LW4LThfdqh6Bz7sv$", "123456789abcdef0",
     "$5$LW4LThfdqh6Bz7sv$9XRqxNtIGURvQqXt/Qh5.8qd9TP0f6d9QQsSe/8Wwp0" },
+  { "$5$rounds=4000$eJdWhzwgPJP6T6Y0", "spong",
+    "$5$rounds=4000$eJdWhzwgPJP6T6Y0$B4yxuoGVpQNeawnNQSVEx7B3.jrjepdhdWCpTDbUs."
+    "C" },
   // Test cases from Glibc SHA512 implementation
   { "$6$wTonSTftbAlySRbm$", "",
     "$6$wTonSTftbAlySRbm$Pj5iduiCImNBnFspPlxMhv."
@@ -77,6 +80,10 @@ const struct test_case test_cases[] = {
     "$6$hUxeZIDLWCspRxjK$"
     "J6tAIKmWvLax9vAugJMobLe1OPmTcyK6h1RFJHzlhIRhDkGnC3RHi3ph0CAyoXGPD55HyfKKiG"
     "kFKIv.fmSy51" },
+  { "$6$rounds=2000$OQtdaztaAc0y6B6N$", "spong",
+    "$6$rounds=2000$OQtdaztaAc0y6B6N$"
+    "bvXElD1BrFu7DDrzD7rNOoO16STacMlOTgo2a6WlQFxpRNI3i//psA1jLts/"
+    "J6x7pyU1UI1s6P5kuugM4AG/Z." }
 };
 
 int main() {

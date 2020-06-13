@@ -30,6 +30,8 @@ enum {
   OPT_HELP = UCHAR_MAX + 1,
   OPT_VERSION,
   OPT_ROUNDS,
+  OPT_NATIVE,
+
   OPT_ALG,
   OPT_DES = OPT_ALG + LIBCRYPT3_DES,
   OPT_MD5 = OPT_ALG + LIBCRYPT3_MD5,
@@ -39,11 +41,13 @@ enum {
 
 static int alg = LIBCRYPT3_SHA512;
 static int rounds = 0;
+static int native = 0;
 
 static const struct option options[] = {
   { "help", no_argument, NULL, OPT_HELP },
   { "version", no_argument, NULL, OPT_VERSION },
   { "rounds", required_argument, NULL, OPT_ROUNDS },
+  { "native", no_argument, NULL, OPT_NATIVE },
   { "des", no_argument, NULL, OPT_DES },
   { "md5", no_argument, NULL, OPT_MD5 },
   { "sha256", no_argument, NULL, OPT_SHA256 },
@@ -80,9 +84,18 @@ static void encrypt(char buffer[], size_t bufsize, const char *pw) {
     perror("picking salt");
     exit(1);
   }
-  if(!libcrypt3_crypt(buffer, bufsize, pw, salt)) {
-    perror("password encryption failed");
-    exit(1);
+  if(native) {
+    const char *encrypted = crypt(pw, salt);
+    if(!encrypted || strlen(encrypted) >= bufsize) {
+      perror("password encryption failed");
+      exit(1);
+    }
+    strcpy(buffer, encrypted);
+  } else {
+    if(!libcrypt3_crypt(buffer, bufsize, pw, salt)) {
+      perror("password encryption failed");
+      exit(1);
+    }
   }
 }
 
@@ -148,6 +161,7 @@ int main(int argc, char **argv) {
     case OPT_HELP: help(); return 0;
     case OPT_VERSION: version(); return 0;
     case OPT_ROUNDS: rounds = atoi(optarg); break;
+    case OPT_NATIVE: native = 1; break;
     case OPT_DES:
     case OPT_MD5:
     case OPT_SHA256:

@@ -25,6 +25,8 @@ AC_CONFIG_SRCDIR([crypt3.c])
 AM_CONFIG_HEADER([config.h])
 AC_LANG([C++])
 AC_PROG_CC
+AC_CHECK_LIB([crypt],[crypt],[LIBCRYPT=-lcrypt])
+AC_SUBST([LIBCRYPT])
 AC_PROG_LIBTOOL
 case $(uname -n) in
 Darwin )
