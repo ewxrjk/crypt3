@@ -19,13 +19,13 @@ tag:=$(shell git describe --tags --dirty --always)
 SUBDIRS=libcrypt3
 
 bin_PROGRAMS=crypt3
-crypt3_SOURCES=crypt3.cc
+crypt3_SOURCES=crypt3.c
 
 noinst_PROGRAMS=test_crypt
-test_crypt_SOURCES=test_crypt.cc
+test_crypt_SOURCES=test_crypt.c
 TESTS=test_crypt
 
-AM_CXXFLAGS=-DTAG=\"${tag}\"
+AM_CFLAGS=-DTAG=\"${tag}\"
 AM_CPPFLAGS=-I ${top_srcdir}/libcrypt3
 LDADD=libcrypt3/libcrypt3.la
 man_MANS=crypt3.1

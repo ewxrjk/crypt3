@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <config.h>
-#include <string>
-
 #include "libcrypt3.h"
+#include <config.h>
+#include <stdio.h>
+#include <string.h>
 
 struct test_case {
-  const std::string salt;
-  const std::string password;
-  const std::string result;
+  const char *salt;
+  const char *password;
+  const char *result;
 };
 
 const struct test_case test_cases[] = {
@@ -81,18 +81,27 @@ const struct test_case test_cases[] = {
 
 int main() {
   int errors = 0;
-  std::string encrypted;
-  for(const auto &tc : test_cases) {
+  const struct test_case *tc;
+  for(tc = test_cases; tc < test_cases + sizeof test_cases / sizeof *test_cases;
+      ++tc) {
     char buffer[LIBCRYPT3_BUFSIZE];
-    encrypted = libcrypt3_crypt(buffer, sizeof buffer, tc.password.c_str(),
-                                tc.salt.c_str());
-    if(encrypted != tc.result) {
+    char *encrypted;
+
+    encrypted = libcrypt3_crypt(buffer, sizeof buffer, tc->password, tc->salt);
+    if(encrypted != buffer) {
+      fprintf(stderr,
+              "ERROR: salt=%s password=%s\n"
+              "expected=%s\n"
+              "     got=NULL\n",
+              tc->salt, tc->password, tc->result);
+      ++errors;
+    }
+    if(strcmp(encrypted, tc->result)) {
       fprintf(stderr,
               "ERROR: salt=%s password=%s\n"
               "expected=%s\n"
               "     got=%s\n",
-              tc.salt.c_str(), tc.password.c_str(), tc.result.c_str(),
-              encrypted.c_str());
+              tc->salt, tc->password, tc->result, encrypted);
       ++errors;
     }
   }

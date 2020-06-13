@@ -21,10 +21,9 @@ AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_AUX_DIR([config.aux])
 AM_INIT_AUTOMAKE([foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
-AC_CONFIG_SRCDIR([crypt3.cc])
+AC_CONFIG_SRCDIR([crypt3.c])
 AM_CONFIG_HEADER([config.h])
 AC_LANG([C++])
-AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_LIBTOOL
 case $(uname -n) in
@@ -34,12 +33,8 @@ Darwin )
   AC_CHECK_LIB([crypto],[SHA256_Init])
   ;;
 esac
-CXXFLAGS="-std=c++11 ${CXXFLAGS}"
 AC_SET_MAKE
 AC_DEFINE([_GNU_SOURCE], [1], [use GNU extensions])
-if test "x$GXX" = xyes; then
-  CXXFLAGS="$CXXFLAGS -Wall -W -Werror -Wpointer-arith -Wwrite-strings"
-fi
 if test "x$GCC" = xyes; then
   CFLAGS="$CFLAGS -Wall -W -Werror -Wpointer-arith -Wwrite-strings"
 fi

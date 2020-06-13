@@ -15,14 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include <cstdio>
-#include <climits>
-#include <cstdlib>
+#include <stdio.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <string.h>
 #include <getopt.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <string>
-#include <algorithm>
 #include <config.h>
 
 #include "libcrypt3.h"
@@ -42,14 +41,14 @@ static int alg = LIBCRYPT3_SHA512;
 static int rounds = 0;
 
 static const struct option options[] = {
-  { "help", no_argument, nullptr, OPT_HELP },
-  { "version", no_argument, nullptr, OPT_VERSION },
-  { "rounds", required_argument, nullptr, OPT_ROUNDS },
-  { "des", no_argument, nullptr, OPT_DES },
-  { "md5", no_argument, nullptr, OPT_MD5 },
-  { "sha256", no_argument, nullptr, OPT_SHA256 },
-  { "sha512", no_argument, nullptr, OPT_SHA512 },
-  { nullptr, 0, nullptr, 0 },
+  { "help", no_argument, NULL, OPT_HELP },
+  { "version", no_argument, NULL, OPT_VERSION },
+  { "rounds", required_argument, NULL, OPT_ROUNDS },
+  { "des", no_argument, NULL, OPT_DES },
+  { "md5", no_argument, NULL, OPT_MD5 },
+  { "sha256", no_argument, NULL, OPT_SHA256 },
+  { "sha512", no_argument, NULL, OPT_SHA512 },
+  { NULL, 0, NULL, 0 },
 };
 
 static void help(void) {
@@ -75,37 +74,60 @@ static void version(void) {
   printf("version %s tag %s\n", PACKAGE_VERSION, TAG);
 }
 
-static std::string encrypt(const std::string pw) {
+static void encrypt(char buffer[], size_t bufsize, const char *pw) {
   char salt[64];
-  char buffer[LIBCRYPT3_BUFSIZE];
-  if(libcrypt3_pick_salt(salt, sizeof salt, alg, 0) < 0) {
+  if(libcrypt3_pick_salt(salt, sizeof salt, alg, rounds) < 0) {
     perror("picking salt");
     exit(1);
   }
-  return libcrypt3_crypt(buffer, sizeof buffer, pw.c_str(), salt);
+  if(!libcrypt3_crypt(buffer, bufsize, pw, salt)) {
+    perror("password encryption failed");
+    exit(1);
+  }
+}
+
+static void getpass_buffer(char buffer[], size_t bufsize, const char *prompt) {
+  for(;;) {
+    const char *pw = getpass(prompt);
+    if(strlen(pw) >= bufsize) {
+      fprintf(stderr, "Password too long\n");
+      continue;
+    }
+    strcpy(buffer, pw);
+    return;
+  }
 }
 
 static int encrypt_getpass(void) {
-  std::string pw1, pw2;
+  char pw1[1024], pw2[1024];
+  char buffer[LIBCRYPT3_BUFSIZE];
 
   for(;;) {
-    pw1 = getpass("Enter password: ");
-    pw2 = getpass("Retype password: ");
-    if(pw1 == pw2)
+    getpass_buffer(pw1, sizeof pw1, "Enter password: ");
+    getpass_buffer(pw2, sizeof pw2, "Retype password: ");
+    if(!strcmp(pw1, pw2))
       break;
     fprintf(stderr, "ERROR: passwords do not match\n");
   }
-  return printf("%s\n", encrypt(pw1).c_str()) < 0;
+  encrypt(buffer, sizeof buffer, pw1);
+  return printf("%s\n", buffer) < 0;
 }
 
 static int encrypt_stdin(void) {
-  std::string s;
+  char line[4096];
+  char buffer[LIBCRYPT3_BUFSIZE];
   for(;;) {
     int ch;
+    size_t pos = 0;
 
-    s.clear();
-    while((ch = getchar()) != EOF && ch != '\n')
-      s += (char)ch;
+    while((ch = getchar()) != EOF && ch != '\n') {
+      if(pos >= sizeof line - 1) {
+        fprintf(stderr, "ERROR: line too long\n");
+        exit(1);
+      }
+      line[pos++] = ch;
+    }
+    line[pos] = 0;
     if(ch == EOF) {
       if(ferror(stdin)) {
         perror("stdin");
@@ -113,14 +135,15 @@ static int encrypt_stdin(void) {
       }
       return 0;
     }
-    if(printf("%s\n", encrypt(s).c_str()) < 0)
+    encrypt(buffer, sizeof buffer, line);
+    if(printf("%s\n", buffer) < 0)
       return 1;
   }
 }
 
 int main(int argc, char **argv) {
   int n;
-  while((n = getopt_long(argc, argv, "", options, nullptr)) >= 0) {
+  while((n = getopt_long(argc, argv, "", options, NULL)) >= 0) {
     switch(n) {
     case OPT_HELP: help(); return 0;
     case OPT_VERSION: version(); return 0;
@@ -141,8 +164,11 @@ int main(int argc, char **argv) {
         return 1;
     }
   } else {
-    for(n = optind; n < argc; n++)
-      printf("%s\n", encrypt(argv[n]).c_str());
+    char buffer[LIBCRYPT3_BUFSIZE];
+    for(n = optind; n < argc; n++) {
+      encrypt(buffer, sizeof buffer, argv[n]);
+      printf("%s\n", buffer);
+    }
   }
   if(fflush(stdout) < 0 || ferror(stdout)) {
     perror("stdout");
